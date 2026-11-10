@@ -18,6 +18,15 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+    * Get the places saved by the user.
+    */
+    public function places()
+    {
+        return $this->belongsToMany(Place::class)
+            ->withPivot('is_favorite', 'send_forecast');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

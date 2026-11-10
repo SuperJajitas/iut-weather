@@ -1,15 +1,25 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WeatherController;
+use App\Models\Place;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $places = Place::all();
+
+    return view('welcome', compact('places'));
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $places = auth()->user()->places;
+
+    return view('dashboard', compact('places'));
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/weather', [WeatherController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('weather.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
